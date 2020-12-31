@@ -3426,35 +3426,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
@@ -3465,28 +3436,33 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+      url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
       zoom: 6,
-      center: [15.313220, -10.319482],
-      data: {},
-      newArea: {}
+      center: [15.31322, -10.319482],
+      datas: {},
+      newArea: {},
+      length: null,
+      results: {},
+      newData: []
     };
   },
-  props: ['contacts', 'areas'],
+  props: ["contacts", "areas"],
   mounted: function mounted() {
     var _this = this;
 
     this.newArea = this.areas;
 
     for (var i = 0; i <= this.newArea.length - 1; i++) {
-      axios.get("https://nominatim.openstreetmap.org/search.php?q=".concat(this.newArea[i].area, "&polygon_geojson=1&format=jsonv2")).then(function (response) {
-        return _this.data = response;
-      }).then(this.setResults);
+      var url = this.newArea[i].area; //   var newData = new Array(this.newArea.length - 1);
+
+      axios.get("https://nominatim.openstreetmap.org/search.php?q=".concat(url, "&polygon_geojson=1&format=jsonv2")).then(function (response) {
+        return _this.datas = response.data;
+      }).then(console.log(this.datas));
     }
   },
   methods: {
     setResults: function setResults(results) {
-      this.data = results;
+      this.datas = results;
     }
   }
 });
@@ -58883,105 +58859,57 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "container-fluid" }, [
-    _c("div", { staticClass: "row" }, [
-      _c("div", { staticClass: "col-md-12" }, [
-        _c("div", { staticClass: "card" }, [
-          _c("div", { staticClass: "card-header text-center" }, [
-            _vm._v("Show")
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "card-body" }, [
-            _c(
-              "table",
-              { staticClass: "table" },
-              [
-                _vm._m(0),
-                _vm._v(" "),
-                _vm._l(_vm.contacts, function(contact) {
-                  return _c("tr", { key: contact.id }, [
-                    _c("td", [_vm._v(_vm._s(contact.category))]),
-                    _vm._v(" "),
-                    _c("td", [_vm._v(_vm._s(contact.lastName))]),
-                    _vm._v(" "),
-                    _c("td", [_vm._v(_vm._s(contact.firstName))]),
-                    _vm._v(" "),
-                    _c("td", [_vm._v(_vm._s(contact.email))]),
-                    _vm._v(" "),
-                    _c("td", [_vm._v(_vm._s(contact.locality))]),
-                    _vm._v(" "),
-                    _c("td", [_vm._v(_vm._s(contact.population))]),
-                    _vm._v(" "),
-                    _c("td", [_vm._v(_vm._s(contact.phone))]),
-                    _vm._v(" "),
-                    _c("td", [_vm._v(_vm._s(contact.details))])
-                  ])
-                })
-              ],
-              2
-            )
-          ])
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "col-md-12" }, [
-        _c(
-          "div",
-          { staticStyle: { width: "70%", heigth: "100px" } },
-          [
-            _c(
-              "l-map",
-              {
-                staticStyle: { height: "350px" },
-                attrs: { zoom: _vm.zoom, center: _vm.center }
-              },
-              [
-                _c("l-tile-layer", { attrs: { url: _vm.url } }),
-                _vm._v(" "),
-                _c(
+    _c(
+      "div",
+      { staticClass: "row" },
+      [
+        _vm._m(0),
+        _vm._v(" "),
+        _vm._l(_vm.datas, function(data, index) {
+          return _c("div", { key: index, staticClass: "col-md-12" }, [
+            _vm.datas != undefined
+              ? _c(
                   "div",
+                  { staticStyle: { width: "70%", heigth: "100px" } },
                   [
+                    _vm._v(
+                      "\n        " +
+                        _vm._s(_vm.datas[0].display_name) +
+                        "\n        "
+                    ),
                     _c(
-                      "l-marker",
+                      "l-map",
                       {
-                        attrs: {
-                          "lat-lng": [
-                            _vm.data.data[0].geojson.coordinates[1],
-                            _vm.data.data[0].geojson.coordinates[0]
-                          ]
-                        }
+                        staticStyle: { height: "350px" },
+                        attrs: { zoom: _vm.zoom, center: _vm.center }
                       },
                       [
+                        _c("l-tile-layer", { attrs: { url: _vm.url } }),
+                        _vm._v(" "),
                         _c(
-                          "l-tooltip",
-                          {
-                            attrs: {
-                              options: { permanent: true, interactive: true }
-                            }
-                          },
+                          "div",
                           [
-                            _vm._v(
-                              "\n                                I am a tooltip\n                            "
-                            )
-                          ]
+                            _c("l-marker", {
+                              attrs: {
+                                "lat-lng": [_vm.datas[0].lat, _vm.datas[0].lon]
+                              }
+                            })
+                          ],
+                          1
                         )
                       ],
                       1
-                    )
+                    ),
+                    _vm._v("\n        " + _vm._s(_vm.datas) + "\n      ")
                   ],
                   1
                 )
-              ],
-              1
-            )
-          ],
-          1
-        )
-      ]),
-      _vm._v("\n        " + _vm._s(_vm.newArea) + " "),
-      _c("br"),
-      _c("br"),
-      _vm._v("\n        " + _vm._s(_vm.data) + "\n    ")
-    ])
+              : _vm._e()
+          ])
+        })
+      ],
+      2
+    )
   ])
 }
 var staticRenderFns = [
@@ -58989,22 +58917,12 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("tr", [
-      _c("th", [_vm._v("catégorie")]),
-      _vm._v(" "),
-      _c("th", [_vm._v("Prénom")]),
-      _vm._v(" "),
-      _c("th", [_vm._v("Nom")]),
-      _vm._v(" "),
-      _c("th", [_vm._v("email")]),
-      _vm._v(" "),
-      _c("th", [_vm._v("Localité")]),
-      _vm._v(" "),
-      _c("th", [_vm._v("pop touchée")]),
-      _vm._v(" "),
-      _c("th", [_vm._v("téléphone")]),
-      _vm._v(" "),
-      _c("th", [_vm._v("détails")])
+    return _c("div", { staticClass: "col-md-12" }, [
+      _c("div", { staticClass: "card" }, [
+        _c("div", { staticClass: "card-header text-center" }, [_vm._v("Show")]),
+        _vm._v(" "),
+        _c("div", { staticClass: "card-body" })
+      ])
     ])
   }
 ]

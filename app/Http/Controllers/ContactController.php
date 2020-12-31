@@ -27,6 +27,7 @@ class ContactController extends Controller
 
         $area = new Area();
         $area->area = $request->input('area');
+        // $area->contact_id =
         $area->save();
         return redirect()->route('contact.show');
     }
@@ -35,6 +36,7 @@ class ContactController extends Controller
     {
         $contacts = Contact::with('area')->get();
         $areas = DB::select('SELECT * FROM areas');
+        // dd($areas);
         return Inertia::render('Dash/ShowProblem',[
             'contacts' => $contacts,
             'areas' => $areas
